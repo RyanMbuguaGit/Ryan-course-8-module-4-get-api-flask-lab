@@ -1,161 +1,80 @@
+# RESTful GET API with Flask
 
-# Module Lab: Building RESTful GET APIs with Flask
+A simple Flask REST API for browsing a fictional product catalog. Built as part of Module 5 (Software Engineering Full Time) — Lab: Building RESTful GET APIs with Flask.
 
-## Learning Goals
+## What It Does
 
-- Implement RESTful API endpoints using Flask.
-- Handle HTTP GET methods to serve resource data.
-- Support query parameters and dynamic route segments.
-- Return consistent JSON responses using `jsonify()`.
-- Follow RESTful conventions in route structure and response formatting.
+This API exposes a small set of GET endpoints for retrieving product data from an in-memory mock dataset. It demonstrates core REST principles: resource-based routing, dynamic path parameters, query string filtering, and JSON responses.
 
-## Introduction
+## Requirements
 
-In this lab, you will build a **Read-Only RESTful API** to serve a list of products. The API will allow users to:
+- Python 3
+- Flask
 
-- Access a homepage route with a welcome message
-- Retrieve all products via `GET /products`
-- Fetch a specific product using `GET /products/<id>`
-- Filter products by category using a query string (`/products?category=books`)
+## Setup
 
-You’ll simulate a product catalog using an in-memory list of dictionaries, format all responses as JSON, and follow best practices for route design and error handling.
+1. Clone the repository:
 
-## Setup Instructions
+   git clone https://github.com/RyanMbuguaGit/Ryan-course-8-module-4-get-api-flask-lab.git
+   cd Ryan-course-8-module-4-get-api-flask-lab
 
-### Fork and Clone the Repository
+2. Install dependencies:
 
-1. Go to the provided GitHub repository link.
-2. Fork the repository to your GitHub account.
-3. Clone the forked repository to your local machine:
+   pip install flask
 
-```bash
-git clone <repo-url>
-cd course-8-module-4-get-api-flask
-```
+3. Run the app:
 
-### Install Dependencies
+   python app.py
 
-Ensure Python is installed:
+4. The server starts at http://localhost:5000.
 
-```bash
-python --version
-```
+## Endpoints
 
-Install Flask and dependencies using pipenv:
+| Method | Route | Description |
+|--------|-------|-------------|
+| GET | `/` | Returns a welcome message |
+| GET | `/products` | Returns all products; supports optional `?category=` filter |
+| GET | `/products/<id>` | Returns a single product by ID, or a 404 error if not found |
 
-```bash
-pipenv install
-pipenv shell
-```
+## Examples
 
-Or with pip:
+**Get all products**
 
-```bash
-pip install flask
-```
+GET /products
 
-## Tasks
+Returns the full list of products as JSON.
 
-### Task 1: Define the Problem
+**Filter products by category**
 
-You’re building a basic product catalog API. It should:
+GET /products?category=books
 
-- Display a welcome message at `/`
-- Serve all products with `GET /products`
-- Retrieve individual products via `GET /products/<id>`
-- Filter products by category using a query string (e.g. `/products?category=books`)
+Returns only products whose category matches "books" (case-insensitive).
 
----
+**Get a single product by ID**
 
-### Task 2: Determine the Design
+GET /products/2
 
-The Flask API should:
+Returns the product with ID 2, or a JSON error with a 404 status if no product matches.
 
-- Use `@app.route()` decorators with `methods=["GET"]`
-- Use `request.args.get()` to handle query parameters
-- Return all output using `jsonify()`
-- Return meaningful HTTP status codes (`200`, `404`)
+## Error Handling
 
----
+Requesting a product ID that doesn't exist returns:
 
-### Task 3: Develop the Code
+{
+  "error": "Product not found"
+}
 
-Create `app.py` and start with the following structure:
+with an HTTP 404 status code.
 
-```python
-from flask import Flask, jsonify, request
+## Project Structure
 
-app = Flask(__name__)
+.
+├── app.py          # Flask app and route definitions
+├── data.py         # Mock product data
+├── tests/          # Test suite
+└── README.md
 
-# Mock data
-products = [
-    {"id": 1, "name": "Laptop", "price": 899.99, "category": "electronics"},
-    {"id": 2, "name": "Book", "price": 14.99, "category": "books"},
-    {"id": 3, "name": "Desk", "price": 199.99, "category": "furniture"},
-]
+## Notes
 
-# TODO: Implement homepage route that returns a welcome message
-# TODO: Implement GET /products route that returns all products or filters by category
-# TODO: Implement GET /products/<id> route that returns a product by ID or 404
-
-if __name__ == "__main__":
-    app.run(debug=True)
-```
-
----
-
-### Task 4: Test the API
-
-Start the Flask development server:
-
-```bash
-python app.py
-```
-
-Test your endpoints using your browser, Postman, or curl:
-
-- `GET http://localhost:5000/`
-- `GET http://localhost:5000/products`
-- `GET http://localhost:5000/products/2`
-- `GET http://localhost:5000/products?category=books`
-
----
-
-## Best Practices
-
-- Use plural nouns for collection routes (e.g., `/products`)
-- Normalize input (e.g., `.lower()`) when filtering by query string
-- Use `jsonify()` for all responses
-- Return:
-  - `200 OK` for successful GET requests
-  - `404 Not Found` if a product ID doesn’t exist
-- Include inline comments to explain your logic
-
----
-
-## Considerations
-
-**1. Input Validation**
-- Handle invalid query parameters or IDs with a clear error message.
-
-**2. Case Sensitivity in Filtering**
-- Normalize both category input and stored data to avoid mismatches.
-
-**3. Consistent Response Structure**
-- Ensure all responses follow the same JSON format.
-
-**4. Modular Code**
-- Keep logic clean and organized. As your API grows, consider separating routes into blueprints and data into separate modules.
-
----
-
-## Conclusion
-
-After completing this lab, you will:
-
-✅ Understand RESTful GET route structure  
-✅ Build routes that serve both collections and single resources  
-✅ Use query strings to filter results  
-✅ Return structured JSON and meaningful HTTP responses  
-
-This lays the foundation for full CRUD APIs in the next module.
+- Category filtering is case-insensitive (e.g. `?category=Books` and `?category=books` return the same results).
+- This is a development server only — not intended for production use.
